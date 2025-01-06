@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useLayoutEffect, useState } from 'react';
 
 export const ThemeChangingContext = createContext({
   change: () => {},
@@ -34,7 +34,7 @@ export const ThemeChangingState = props => {
     }
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     window
       .matchMedia('(prefers-color-scheme: dark)')
       .addEventListener('change', e => {

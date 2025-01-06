@@ -17,7 +17,10 @@
     }
   }
   .usage {
-    @apply self-start min-h-9 py-1 px-4 rounded-lg bg-lt-third dark:bg-dt-third font-inconsolata flex items-center gap-2 break-words break-all;
+    @apply self-start min-h-9 py-1 px-4 rounded-lg bg-lt-third dark:bg-dt-third font-inconsolata items-center gap-2 break-words break-all flex flex-wrap;
+    h4 {
+      @apply break-normal;
+    }
   }
   .page_elements-commands {
     .sidebar {
@@ -99,7 +102,7 @@
               @apply mb-2 border-main-purple;
             }
             p {
-              @apply mb-2 flex flex-wrap items-center;
+              @apply mb-2 flex flex-wrap items-center gap-1;
             }
             .prefix,
             ul span {

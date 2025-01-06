@@ -236,8 +236,7 @@
   }
   .phone-menu,
   .settings-menu {
-    transition: background-color transform !important;
-    @apply rounded-xl top-20 max-h-[calc(100vh-96px)]  translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 p-2 flex flex-col shadow-white/50 dark:shadow-black/50 transition-all duration-200 ease-out bg-lt-main dark:bg-dt-main fixed z-40 overflow-x-auto;
+    @apply rounded-xl top-20 max-h-[calc(100vh-96px)]  translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 p-2 flex flex-col shadow-white/50 dark:shadow-black/50 transition-transform duration-200 ease-out bg-lt-main dark:bg-dt-main fixed z-40 overflow-x-auto;
     &.show {
       @apply opacity-100 translate-x-0 -translate-y-0 scale-100;
     }
@@ -256,6 +255,7 @@
   .phone-btn {
     @apply flex-row-reverse;
   }
+
   .phone-btn,
   .settings-btn,
   .commands_category-btn,
@@ -297,9 +297,7 @@
     &_body {
       @apply grid grid-rows-[0fr]  overflow-hidden transition-all duration-200 ease-out-max;
       &_content {
-        transition: color !important;
-
-        @apply flex min-h-0 gap-2 flex-col invisible duration-200 ease-out-max;
+        @apply flex min-h-0 gap-2 flex-col invisible duration-0 ease-out-max;
       }
     }
     &_expand {

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-// import api_commands_en from '@/Api/api_commands_en.json';
-// import api_commands_ru from '@/Api/api_commands_ru.json';
+import api_commands_en from '@/Api/api_commands_en.json';
+import api_commands_ru from '@/Api/api_commands_ru.json';
 import { LangChangingContext } from '@context/LangContext';
 import ReactMarkdown from 'react-markdown';
 import SVGExpand from '@/components/5Entities/SVG/SVGExpand';
@@ -28,6 +28,8 @@ export const CommandsState = props => {
   const [searchTerm, setSearchTerm] = useState('');
   const [commandsAll, setCommandsAll] = useState([]);
 
+  const [errors, setErrors] = useState([]);
+
   async function getLng(lang) {
     setDisplay(
       <div
@@ -54,57 +56,91 @@ export const CommandsState = props => {
       </div>,
     );
 
-    await fetch(`https://api.lordcord.fun/command_data/${lang}`)
-      .then(response => response.json())
-      .then(data =>
-        setTranslationsData({ ...translationsData, [lang]: { all: data } }),
-      )
-      .catch(e => {
-        console.error(
-          `Failed to get a list of commands:\n%c${e.stack}`,
-          `color: #f44;`,
-        );
+    // if (lang == 'ru') {
+    //   setTranslationsData({
+    //     ...translationsData,
+    //     ru: { all: api_commands_ru },
+    //   });
+    // } else if (lang == 'en') {
+    //   setTranslationsData({
+    //     ...translationsData,
+    //     ru: { all: api_commands_en },
+    //   });
+    // }
+    //   await fetch(`https://api.lordcord.fun/command_data/${lang}`)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       setTranslationsData({ ...translationsData, [lang]: { all: data } });
 
-        // setDisplay(
-        //   Error(
-        //     `Failed to get a list of commands (${e.name})`,
-        //     e.message,
-        //     e.stack,
-        //   ),
-        // );
+    //       console.log(data);
 
-        setDisplay(
-          <div
-            className='dd-menu command'
-            tabIndex='0'>
-            <div className='dd-menu_container'>
-              <div
-                className='dd-menu_name'
-                onClick={clickHandler}>
-                <span className='main-sec'>Ошибка</span> — Скопируйте эту ошибку
-                и отправьте в наш{' '}
-                <a
-                  href='https://support.lordcord.fun/'
-                  className='link'>
-                  сервер поддержки
-                </a>
-              </div>
-              <div className='dd-menu_body'>
-                <div className='dd-menu_body_content'>
-                  Подождите некоторое время и перезагрузите страницу
-                  <h4>{e.message}</h4>
-                  {e.stack}
-                </div>
-              </div>
-            </div>
-            <div
-              className='dd-menu_expand'
-              onClick={clickHandler}>
-              <SVGExpand />
-            </div>
-          </div>,
-        );
-      });
+    //       // if (data.code >= 300)
+    //       //   setErrors([
+    //       //     ...errors,
+    //       //     { name: 'Fetch', message: String(data.code), stack: data.message },
+    //       //   ]);
+
+    //       throw {
+    //         name: 'Fetch',
+    //         message: String(data.code),
+    //         stack: data.message,
+    //       };
+    //     })
+    //     .catch(e => {
+    //       console.error(
+    //         `Failed to get a list of commands:\n%c${e.stack}`,
+    //         `color: #f44;`,
+    //       );
+
+    //       setDisplay(
+    //         <div
+    //           className='dd-menu command'
+    //           tabIndex='0'>
+    //           <div className='dd-menu_container'>
+    //             <div
+    //               className='dd-menu_name'
+    //               onClick={clickHandler}>
+    //               <span className='main-sec'>Ошибка</span> — Скопируйте эту ошибку
+    //               и отправьте в наш{' '}
+    //               <a
+    //                 href='https://support.lordcord.fun/'
+    //                 className='link'>
+    //                 сервер поддержки
+    //               </a>
+    //             </div>
+    //             <div className='dd-menu_body'>
+    //               <div className='dd-menu_body_content'>
+    //                 Подождите некоторое время и перезагрузите страницу
+    //                 <h4>{e.message}</h4>
+    //                 {e.stack}
+    //               </div>
+    //             </div>
+    //           </div>
+    //           <div
+    //             className='dd-menu_expand'
+    //             onClick={clickHandler}>
+    //             <SVGExpand />
+    //           </div>
+    //         </div>,
+    //       );
+    //     });
+    // }
+
+    if (!(lng in translationsData)) {
+      //pseudo fetch
+      // fetch(`https://api.lordcord.fun/command_data/${lng}`).then(res => JSON.parse(res)).then(json => {translations[lng] = json}
+      if (lng == 'ru') {
+        setTranslationsData({
+          ...translationsData,
+          [lng]: { all: api_commands_ru },
+        });
+      } else {
+        setTranslationsData({
+          ...translationsData,
+          [lng]: { all: api_commands_en },
+        });
+      }
+    }
   }
 
   const examplesList = list => {
@@ -267,6 +303,9 @@ export const CommandsState = props => {
         `The list of commands could not be compiled:\n%c${e.stack}`,
         `color: #f44;`,
       );
+
+      setErrors([...errors, e]);
+      // console.log(errors);
       setDisplay(
         <div
           className='dd-menu command'
@@ -286,8 +325,16 @@ export const CommandsState = props => {
             <div className='dd-menu_body'>
               <div className='dd-menu_body_content'>
                 Подождите некоторое время и перезагрузите страницу
-                <h4>{e.message}</h4>
-                {e.stack}
+                <div className='usage relative'>
+                  {errors.map((el, index) => {
+                    return (
+                      <div key={index}>
+                        <h4>{el.message}</h4>
+                        {el.stack}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
